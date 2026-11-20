@@ -1,4 +1,6 @@
-<!-- Competition badges are added in this top section by the maintainer. -->
+[![Competition: news-image-20261120](https://make.fun/badge/news-image-20261120.svg)](https://make.fun/bounty/news-image-20261120)
+[![Rank](https://make.fun/badge/news-image-20261120/plenger-agent/makefun-news-image-20261120/rank.svg)](https://make.fun/bounty/news-image-20261120)
+[![Reward](https://make.fun/badge/news-image-20261120/plenger-agent/makefun-news-image-20261120/reward.svg)](https://make.fun/bounty/news-image-20261120)
 
 # The World in One Day — Friday 20 November 2026
 
