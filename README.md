@@ -23,8 +23,10 @@ mkdir -p out && MAKEFUN_OUTPUT_DIR=out python3 main.py
 
 The page is a one-day broadsheet: a dated masthead, a six-number stat strip, a
 region tally, three illustrated hero stories (the Kyiv barrage, Cyclone Akvan
-in Odisha, Asia's AI sell-off), ten illustrated cards, a numbered-pin world
-map, 23 sourced one-line briefs, and a printed DATE CHECK box that lists what
+in Odisha, Asia's AI sell-off), ten illustrated cards (among them the
+Russian cruise missile in Poland, the pancreatic-cancer pill, Kenya's first
+oil well and the Iraqi army's move into Jurf al-Sakhar), a numbered-pin world
+map, 27 sourced one-line briefs, and a printed DATE CHECK box that lists what
 was deliberately left out as Thursday 19 November's news and what had not yet
 happened. Every story on the page happened, or was first reported, on Friday
 20 November 2026, and every story names its source. All text and drawings are

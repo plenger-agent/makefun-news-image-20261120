@@ -8,7 +8,7 @@ randomness, no clock and no network, so two runs write identical bytes.
 
 Layout, top to bottom: strap line, dated masthead, deck, a six-number stat
 strip, a region tally bar, three illustrated hero stories, ten illustrated
-cards, a numbered-pin world map beside 23 sourced one-line briefs, a DATE
+cards, a numbered-pin world map beside 27 sourced one-line briefs, a DATE
 CHECK box, and a footer. Every story happened, or was first reported, on
 Friday 20 November 2026, and names its source beside it.
 """
@@ -182,9 +182,9 @@ def rule(draw, x0, x1, y, fill=INK, width=1):
 def draw_strap(draw):
     fnt = sans_bold(11)
     draw.text((MARGIN, 7), "THE WORLD IN ONE DAY", font=fnt, fill=INK)
-    left2 = "13 STORIES DRAWN · 23 IN BRIEF"
+    left2 = "13 STORIES DRAWN · 27 IN BRIEF"
     draw.text((MARGIN + 196, 7), left2, font=sans(11), fill=INK_SOFT)
-    right = "36 STORIES · 7 REGIONS · ALL FRIDAY 20 NOVEMBER 2026"
+    right = "40 STORIES · 7 REGIONS · ALL FRIDAY 20 NOVEMBER 2026"
     draw.text((W - MARGIN - text_w(draw, right, fnt), 7), right,
               font=fnt, fill=RED_DARK)
     rule(draw, MARGIN, W - MARGIN, 27, INK, 3)
@@ -194,16 +194,16 @@ def draw_strap(draw):
 def draw_masthead(draw):
     title = "Friday 20 November 2026"
     fnt, _ = fit_font(draw, title, SERIF_BOLD_CANDIDATES, 96, W - 2 * MARGIN)
-    centered(draw, W // 2, 38, title, fnt, INK)
-    rule(draw, MARGIN, W - MARGIN, 128, INK, 1)
-    rule(draw, MARGIN, W - MARGIN, 131, INK, 3)
+    centered(draw, W // 2, 34, title, fnt, INK)
+    rule(draw, MARGIN, W - MARGIN, 124, INK, 1)
+    rule(draw, MARGIN, W - MARGIN, 127, INK, 3)
 
 
 def draw_deck(draw):
     deck = ("Kyiv under a huge overnight barrage · Cyclone Akvan ashore in "
             "Odisha · Asia's AI rout deepens · COP31's last day, still no deal")
     fnt, _ = fit_font(draw, deck, SERIF_ITALIC_CANDIDATES, 17, W - 2 * MARGIN)
-    centered(draw, W // 2, 138, deck, fnt, INK_SOFT)
+    centered(draw, W // 2, 133, deck, fnt, INK_SOFT)
 
 
 STATS = [
@@ -225,10 +225,10 @@ def draw_stats(draw, y0=162, y1=232):
         cx = MARGIN + col_w * i + col_w / 2
         centered(draw, cx, y0 + 5, num, num_fnt, RED)
         lines = wrap(draw, gloss, gloss_fnt, col_w - 12)
-        gy = y0 + 41
+        gy = y0 + 40
         for line in lines[:2]:
             centered(draw, cx, gy, line, gloss_fnt, INK)
-            gy += 11
+            gy += 10
         if i:
             draw.line([MARGIN + col_w * i, y0 + 10, MARGIN + col_w * i,
                        y1 - 10], fill=HAIR, width=1)
@@ -236,13 +236,13 @@ def draw_stats(draw, y0=162, y1=232):
 
 
 REGIONS = [
-    ("EUROPE", 9, NAVY),
-    ("ASIA", 9, RED),
-    ("MIDDLE EAST", 4, GOLD),
-    ("AMERICAS", 5, GREEN),
-    ("AFRICA", 3, (150, 84, 40)),
-    ("OCEANIA", 3, BLUE),
-    ("GLOBAL", 3, INK_SOFT),
+    ("EUROPE", 14, NAVY),
+    ("ASIA", 10, RED),
+    ("MIDDLE EAST", 5, GOLD),
+    ("AFRICA", 4, (150, 84, 40)),
+    ("AMERICAS", 3, GREEN),
+    ("OCEANIA", 2, BLUE),
+    ("GLOBAL", 2, INK_SOFT),
 ]
 
 
@@ -314,6 +314,19 @@ def art_kyiv(draw, box):
               width=2)
     for px in (x0 + 60, x0 + 210):
         draw.rectangle([px, deck_y, px + 5, y1 - 2], fill=(120, 128, 140))
+    # a lit suspension bridge: two towers, sagging cables, lamps on the deck
+    for tx in (x0 + 60, x0 + 150):
+        draw.rectangle([tx, base - 15, tx + 5, deck_y + 2],
+                       fill=(150, 158, 170))
+    draw.line([x0 + 4, deck_y, x0 + 62, base - 15], fill=(170, 178, 190),
+              width=1)
+    draw.line([x0 + 62, base - 15, x0 + 152, base - 15], fill=(170, 178, 190),
+              width=1)
+    draw.line([x0 + 152, base - 15, x1 - 4, deck_y], fill=(170, 178, 190),
+              width=1)
+    for lx in range(x0 + 16, x1 - 10, 16):
+        draw.ellipse([lx - 1, deck_y - 3, lx + 2, deck_y],
+                     fill=(255, 220, 130))
     burst(draw, x0 + 96, base - 18, 13, (255, 170, 60))
     burst(draw, x0 + 238, base - 30, 10, (255, 140, 60))
     burst(draw, x0 + 300, base - 8, 8, (255, 190, 80))
@@ -329,16 +342,29 @@ def art_akvan(draw, box):
     # a sandy shore strip along the bottom right for the shelters
     draw.polygon([(x0 + 148, y1), (x0 + 192, y1 - 30), (x1, y1 - 30),
                   (x1, y1)], fill=(222, 205, 160))
-    # cyclone spiral
+    # cyclone spiral, drawn large so it fills the panel
     cx, cy = x0 + 92, y0 + 44
-    for r, start in [(40, 20), (31, 140), (22, 260), (13, 60)]:
+    for r, start in [(54, 20), (43, 140), (31, 260), (20, 60), (10, 150)]:
         draw.arc([cx - r, cy - r * 0.72, cx + r, cy + r * 0.72], start,
-                 start + 235, fill=(52, 92, 128), width=4)
-    draw.ellipse([cx - 4, cy - 4, cx + 4, cy + 4], fill=(52, 92, 128))
+                 start + 235, fill=(52, 92, 128), width=5)
+    draw.ellipse([cx - 5, cy - 5, cx + 5, cy + 5], fill=(52, 92, 128))
     # rain streaks over the sea
     for i in range(5):
         rx = x0 + 18 + i * 26
         draw.line([rx, y0 + 64, rx - 8, y0 + 80], fill=(70, 110, 140),
+                  width=2)
+    # a flooded road on the left, with a queue picking its way along it
+    draw.polygon([(x0, y1 - 16), (x0 + 132, y1 - 16), (x0 + 152, y1),
+                  (x0, y1)], fill=(148, 146, 138))
+    for dx in range(8, 140, 18):
+        draw.line([x0 + dx, y1 - 8, x0 + dx + 9, y1 - 8],
+                  fill=(240, 238, 228), width=2)
+    for qx in (x0 + 26, x0 + 44, x0 + 62):
+        draw.rectangle([qx, y1 - 26, qx + 12, y1 - 17], fill=(70, 84, 96))
+        draw.rectangle([qx + 2, y1 - 30, qx + 9, y1 - 26], fill=(70, 84, 96))
+    for fx in (x0 + 92, x0 + 104, x0 + 116):
+        draw.ellipse([fx, y1 - 27, fx + 4, y1 - 23], fill=(40, 40, 40))
+        draw.line([fx + 2, y1 - 23, fx + 2, y1 - 15], fill=(40, 40, 40),
                   width=2)
     # palms leaning in the wind, rooted on the shore
     for px in (x1 - 52, x1 - 18):
@@ -424,20 +450,20 @@ HEROES = [
 def draw_hero(draw, x, y, w, h, hero):
     draw.rectangle([x, y, x + w, y + h], outline=HAIR, width=1)
     hero["art"](draw, (x + 1, y + 1, x + w - 1, y + 84))
-    cy = y + 89
-    chip(draw, x + 7, cy, hero["label"], sans_bold(10), RED, WHITE)
-    chip_right(draw, x + w - 7, cy, hero["source"], sans(9), HAIR, INK_SOFT)
-    ky = cy + 19
+    cy = y + 88
+    chip(draw, x + 7, cy, hero["label"], sans_bold(12), RED, WHITE)
+    chip_right(draw, x + w - 7, cy, hero["source"], sans(10), HAIR, INK_SOFT)
+    ky = cy + 20
     draw.text((x + 7, ky), hero["kicker"], font=sans_bold(9), fill=RED_DARK)
-    hy = ky + 13
+    hy = ky + 12
     hy = draw_wrapped(draw, (x + 7, hy), hero["headline"], serif_bold(15),
-                      INK, w - 14, 18, max_lines=2)
+                      INK, w - 14, 16, max_lines=2)
     draw_wrapped(draw, (x + 7, hy + 2), hero["body"], sans(11), INK,
-                 w - 14, 13, max_lines=3)
-    fact_w = text_w(draw, hero["fact"], sans_bold(9)) + 10
-    draw.rounded_rectangle([x + w - fact_w - 7, y + 60, x + w - 7, y + 78],
+                 w - 14, 12, max_lines=3)
+    fact_w = text_w(draw, hero["fact"], sans_bold(10)) + 10
+    draw.rounded_rectangle([x + w - fact_w - 7, y + 58, x + w - 7, y + 76],
                            radius=3, fill=NAVY)
-    draw.text((x + w - fact_w - 2, y + 63), hero["fact"], font=sans_bold(9),
+    draw.text((x + w - fact_w - 2, y + 61), hero["fact"], font=sans_bold(10),
               fill=WHITE)
 
 
@@ -517,19 +543,27 @@ def icon_cricket(d, b):
         d.line([sx, y0 + 12, sx, y1 - 8], fill=(196, 158, 96), width=3)
 
 
-def icon_seoul(d, b):
+def icon_poland(d, b):
     x0, y0, x1, y1 = b
-    d.rectangle(b, fill=(232, 228, 238))
-    # courthouse columns
-    for cx in (x0 + 34, x0 + 62, x0 + 90, x0 + 118):
-        d.rectangle([cx, y0 + 16, cx + 10, y1 - 10], fill=(150, 146, 160))
-    d.polygon([(x0 + 24, y0 + 16), (x0 + 76, y0 + 4), (x0 + 128, y0 + 16)],
-              fill=NAVY)
-    d.rectangle([x0 + 20, y1 - 10, x0 + 132, y1 - 6], fill=NAVY)
-    # gavel
-    d.line([x0 + 150, y1 - 12, x0 + 172, y0 + 14], fill=(120, 84, 40),
-           width=4)
-    d.rectangle([x0 + 164, y0 + 6, x0 + 180, y0 + 16], fill=(120, 84, 40))
+    d.rectangle(b, fill=(198, 216, 232))
+    # a green field along the bottom, with a darker furrow stripe
+    d.rectangle([x0, y1 - 24, x1, y1], fill=(96, 142, 78))
+    d.rectangle([x0, y1 - 24, x1, y1 - 18], fill=(80, 122, 64))
+    # a cruise missile slanting down toward the field, nose first
+    d.polygon([(x0 + 128, y0 + 8), (x0 + 142, y0 + 15), (x0 + 88, y0 + 40),
+               (x0 + 76, y0 + 31)], fill=(120, 126, 134))
+    d.polygon([(x0 + 76, y0 + 31), (x0 + 88, y0 + 40), (x0 + 66, y0 + 44)],
+              fill=RED)
+    d.polygon([(x0 + 128, y0 + 8), (x0 + 140, y0 + 2), (x0 + 142, y0 + 15)],
+              fill=(90, 96, 104))
+    d.polygon([(x0 + 124, y0 + 18), (x0 + 136, y0 + 22), (x0 + 128, y0 + 30)],
+              fill=(90, 96, 104))
+    # motion streaks behind the tail
+    for off in (0, 7, 14):
+        d.line([x0 + 146 + off, y0 + 4 + off // 2, x0 + 168 + off,
+                y0 + 10 + off // 2], fill=(240, 244, 248), width=2)
+    # a burst where the nose meets the field
+    burst(d, x0 + 62, y1 - 22, 10, (240, 170, 60))
 
 
 def icon_ballot(d, b):
@@ -544,68 +578,76 @@ def icon_ballot(d, b):
     d.line([x0 + 90, y0 + 18, x0 + 102, y0 + 18], fill=INK_SOFT, width=1)
 
 
-def icon_hormuz(d, b):
+def icon_cancer(d, b):
     x0, y0, x1, y1 = b
-    d.rectangle(b, fill=(196, 218, 232))
-    d.rectangle([x0, y1 - 12, x1, y1], fill=(64, 116, 150))
-    # tanker
-    d.polygon([(x0 + 34, y1 - 16), (x0 + 150, y1 - 16), (x0 + 138, y1 - 26),
-               (x0 + 44, y1 - 26)], fill=(60, 60, 66))
-    for tx in (x0 + 56, x0 + 82, x0 + 108):
-        d.rectangle([tx, y1 - 34, tx + 18, y1 - 26], fill=(168, 60, 50))
-    d.rectangle([x0 + 132, y1 - 38, x0 + 142, y1 - 26], fill=(60, 60, 66))
-    # strait markers
-    d.polygon([(x0 + 8, y0 + 2), (x0 + 40, y0 + 2), (x0 + 24, y0 + 14)],
-              fill=(214, 196, 150))
-    d.polygon([(x1 - 40, y0 + 2), (x1 - 8, y0 + 2), (x1 - 24, y0 + 14)],
-              fill=(214, 196, 150))
+    d.rectangle(b, fill=(233, 238, 230))
+    # a big two-tone capsule across the top of the panel
+    d.rounded_rectangle([x0 + 22, y0 + 8, x0 + 118, y0 + 30], radius=11,
+                        fill=WHITE, outline=INK, width=2)
+    d.rounded_rectangle([x0 + 22, y0 + 8, x0 + 70, y0 + 30], radius=11,
+                        fill=RED)
+    d.rectangle([x0 + 59, y0 + 10, x0 + 70, y0 + 28], fill=RED)
+    # tumour circles shrinking from left to right beneath the pill
+    for cx, r in [(x0 + 48, 12), (x0 + 96, 9), (x0 + 136, 6)]:
+        cy = y1 - 16
+        d.ellipse([cx - r, cy - r, cx + r, cy + r], outline=RED_DARK,
+                  width=2)
+        d.ellipse([cx - r // 2, cy - r // 2, cx + r // 2, cy + r // 2],
+                  fill=RED)
+    # a small green down-step marker at the end of the row
+    d.polygon([(x0 + 158, y1 - 22), (x0 + 170, y1 - 22), (x0 + 164, y1 - 10)],
+              fill=GREEN)
 
 
-def icon_f1(d, b):
+def icon_kenya(d, b):
     x0, y0, x1, y1 = b
-    d.rectangle(b, fill=(52, 56, 72))
-    # rain
-    for i in range(8):
-        rx = x0 + 14 + i * 22
-        d.line([rx, y0 + 4, rx - 4, y0 + 12], fill=(140, 170, 210), width=1)
-    # simple race car
-    d.polygon([(x0 + 30, y1 - 14), (x0 + 62, y1 - 22), (x0 + 118, y1 - 22),
-               (x0 + 148, y1 - 14)], fill=RED)
-    d.polygon([(x0 + 74, y1 - 22), (x0 + 88, y1 - 30), (x0 + 106, y1 - 30),
-               (x0 + 116, y1 - 22)], fill=RED_DARK)
-    d.rectangle([x0 + 22, y1 - 20, x0 + 40, y1 - 16], fill=INK)
-    d.rectangle([x0 + 140, y1 - 26, x0 + 158, y1 - 22], fill=INK)
-    for wx in (x0 + 48, x0 + 128):
-        d.ellipse([wx - 8, y1 - 16, wx + 8, y1 - 2], fill=INK)
-        d.ellipse([wx - 3, y1 - 11, wx + 3, y1 - 5], fill=(150, 150, 150))
-    d.line([x0 + 8, y1 - 4, x1 - 8, y1 - 4], fill=(200, 200, 200), width=1)
+    d.rectangle(b, fill=(220, 232, 238))
+    d.ellipse([x1 - 44, y0 + 6, x1 - 18, y0 + 32], fill=GOLD)
+    # a drilling derrick: a braced triangle tower with a drill line
+    apex = (x0 + 88, y0 + 8)
+    d.line([x0 + 52, y1 - 10, apex[0], apex[1]], fill=INK, width=3)
+    d.line([x0 + 124, y1 - 10, apex[0], apex[1]], fill=INK, width=3)
+    d.line([x0 + 64, y1 - 26, x0 + 112, y1 - 26], fill=INK, width=2)
+    d.line([x0 + 64, y1 - 26, x0 + 112, y1 - 10], fill=INK_SOFT, width=1)
+    d.line([x0 + 112, y1 - 26, x0 + 64, y1 - 10], fill=INK_SOFT, width=1)
+    d.line([apex[0], apex[1], apex[0], y1 - 26], fill=RED, width=2)
+    # dry ground, and a first drop of crude beside the tower
+    d.rectangle([x0, y1 - 10, x1, y1], fill=(150, 116, 74))
+    d.polygon([(x0 + 150, y1 - 24), (x0 + 158, y1 - 12), (x0 + 142, y1 - 12)],
+              fill=INK)
+    d.ellipse([x0 + 143, y1 - 14, x0 + 157, y1 - 8], fill=INK)
 
 
-def icon_fuel(d, b):
+def icon_iraq(d, b):
     x0, y0, x1, y1 = b
-    d.rectangle(b, fill=(240, 230, 200))
-    # pump
-    d.rectangle([x0 + 30, y0 + 8, x0 + 58, y1 - 6], fill=RED)
-    d.rectangle([x0 + 36, y0 + 13, x0 + 52, y0 + 24], fill=WHITE)
-    d.line([x0 + 58, y0 + 16, x0 + 68, y0 + 24], fill=INK, width=2)
-    d.line([x0 + 68, y0 + 24, x0 + 68, y1 - 12], fill=INK, width=2)
-    # queue of cars
-    for i, cx in enumerate((x0 + 92, x0 + 128, x0 + 162)):
-        yy = y1 - 14 - (i % 2) * 8
-        d.rectangle([cx, yy, cx + 24, yy + 8], fill=NAVY_LIGHT)
-        d.ellipse([cx + 3, yy + 6, cx + 9, yy + 12], fill=INK)
-        d.ellipse([cx + 15, yy + 6, cx + 21, yy + 12], fill=INK)
+    d.rectangle(b, fill=(230, 221, 198))
+    # a stronghold block on the right, with crenellations and a doorway
+    d.rectangle([x0 + 128, y0 + 18, x1 - 8, y1 - 8], fill=(178, 152, 104))
+    for mx in range(x0 + 132, x1 - 16, 14):
+        d.rectangle([mx, y0 + 10, mx + 8, y0 + 18], fill=(178, 152, 104))
+    d.rectangle([x0 + 152, y1 - 24, x0 + 166, y1 - 8], fill=(90, 70, 44))
+    # a tank rolling in from the left toward the stronghold
+    d.rounded_rectangle([x0 + 14, y1 - 22, x0 + 78, y1 - 8], radius=6,
+                        fill=(84, 92, 62))
+    d.polygon([(x0 + 22, y1 - 22), (x0 + 34, y1 - 32), (x0 + 70, y1 - 32),
+               (x0 + 78, y1 - 22)], fill=(96, 104, 70))
+    d.rectangle([x0 + 40, y1 - 40, x0 + 62, y1 - 32], fill=(84, 92, 62))
+    d.line([x0 + 62, y1 - 36, x0 + 96, y1 - 36], fill=(60, 66, 46), width=4)
+    for wx in (x0 + 26, x0 + 46, x0 + 66):
+        d.ellipse([wx - 4, y1 - 19, wx + 4, y1 - 11], fill=(52, 58, 38))
+    # sand along the bottom
+    d.rectangle([x0, y1 - 8, x1, y1], fill=(196, 172, 122))
 
 
 CARDS = [
     {"icon": icon_cop31, "label": "COP31", "source": "Draft text",
      "kicker": "4 · ANTALYA, TÜRKIYE · CLIMATE",
      "headline": "Final day at COP31 - and still no deal",
-     "body": "The draft omits fossil fuels; a $120bn adaptation gap stays open."},
+     "body": "The draft omits fossil fuels; a $120bn adaptation gap stays."},
     {"icon": icon_japan, "label": "JAPAN PRICES", "source": "Official data",
      "kicker": "5 · TOKYO, JAPAN · ECONOMY",
      "headline": "Inflation quickens: 2.3% headline, 2.2% core",
-     "body": "Core rose 2.2%, its fastest this year; a December rise is in view."},
+     "body": "Core up 2.2%, fastest this year; a December rise in view."},
     {"icon": icon_uk_eu, "label": "UK-EU RESET", "source": "Agreed text",
      "kicker": "6 · BRUSSELS · EUROPE",
      "headline": "Britain and the EU seal their 'reset' deal",
@@ -613,50 +655,50 @@ CARDS = [
     {"icon": icon_italy, "label": "ITALY STRIKE", "source": "Union count",
      "kicker": "7 · ROME, ITALY · LABOUR",
      "headline": "General strike stops Italy over the budget",
-     "body": "CGIL's 24-hour stoppage fills some 100 squares; trains and transit hit."},
+     "body": "CGIL's 24-hour stoppage fills 100 squares; transit hit."},
     {"icon": icon_cricket, "label": "CRICKET", "source": "Scorecard · ICC",
      "kicker": "8 · WELLINGTON, NZ · SPORT",
      "headline": "Phillips hits 118 as New Zealand pile up 368",
      "body": "Against India; Nicholls made 175* in a 216-run stand."},
-    {"icon": icon_seoul, "label": "SEOUL COURT ROW", "source": "Broadcaster",
-     "kicker": "9 · SEOUL, S KOREA · POLITICS",
-     "headline": "Ruling party moves to impeach chief justice",
-     "body": "Lawmakers target Cho Hee-dae after an overturned conviction. (SBS)"},
+    {"icon": icon_poland, "label": "POLAND: MISSILE", "source": "Reuters",
+     "kicker": "9 · EASTERN POLAND · SECURITY",
+     "headline": "Russian cruise missile lands in Poland",
+     "body": "Kh-101 in a field; two airports paused, no one hurt. (Reuters)"},
+    {"icon": icon_cancer, "label": "CANCER PILL", "source": "Trial data",
+     "kicker": "10 · BARCELONA, SPAIN · HEALTH",
+     "headline": "Pancreatic cancer pill: 60.7% respond",
+     "body": "Tumours shrank with chemo in 61 patients; chemo alone: 23-42%."},
+    {"icon": icon_kenya, "label": "KENYA: OIL", "source": "allAfrica",
+     "kicker": "11 · TURKANA, KENYA · ENERGY",
+     "headline": "Kenya starts drilling its first oil well",
+     "body": "First crude from Turkana is due on 1 December. (allAfrica)"},
+    {"icon": icon_iraq, "label": "IRAQ: ARMY IN", "source": "Reuters",
+     "kicker": "12 · JURF AL-SAKHAR, IRAQ · SECURITY",
+     "headline": "Iraqi army enters a militia stronghold",
+     "body": "Troops move into Jurf al-Sakhar, a militia base. (Reuters)"},
     {"icon": icon_ballot, "label": "BUKELE AGAIN", "source": "Filed",
-     "kicker": "10 · SAN SALVADOR · POLITICS",
+     "kicker": "13 · SAN SALVADOR · POLITICS",
      "headline": "Bukele files to run for a third term",
-     "body": "Filed at Thursday night's deadline; the vote is 28 February 2027."},
-    {"icon": icon_hormuz, "label": "HORMUZ", "source": "Ship trackers",
-     "kicker": "11 · STRAIT OF HORMUZ · SHIPPING",
-     "headline": "Strait stays shut; 46 ships wait, Brent $92.50",
-     "body": "The count was taken at 02:30 UTC, tankers holding off the strait."},
-    {"icon": icon_f1, "label": "GRAND PRIX", "source": "Timing sheet",
-     "kicker": "12 · LAS VEGAS, USA · F1",
-     "headline": "Russell fastest in a wet Las Vegas practice",
-     "body": "His 1:47.272 topped the times in the rain; qualifying is Saturday."},
-    {"icon": icon_fuel, "label": "MALAWI FUEL", "source": "Ministry",
-     "kicker": "13 · LILONGWE, MALAWI · FUEL",
-     "headline": "Fuel crisis: a 20-litre daily cap in Malawi",
-     "body": "Petrol is $3.24 a litre; the ministry blames a forex shortage."},
+     "body": "Filings close: Bukele is in for a third term; vote 28 Feb 2027."},
 ]
 
 
 def draw_card(draw, x, y, w, h, card):
     draw.rectangle([x, y, x + w, y + h], outline=HAIR, width=1)
-    card["icon"](draw, (x + 1, y + 1, x + w - 1, y + 45))
-    chip(draw, x + 5, y + 28, card["label"], sans_bold(8), RED, WHITE,
-         pad_x=4, pad_y=1)
-    src_w = text_w(draw, card["source"], sans(8)) + 8
-    draw.rounded_rectangle([x + w - src_w - 5, y + 28, x + w - 5, y + 43],
+    card["icon"](draw, (x + 1, y + 1, x + w - 1, y + 68))
+    chip(draw, x + 5, y + 49, card["label"], sans_bold(11), RED, WHITE,
+         pad_x=5, pad_y=2)
+    src_w = text_w(draw, card["source"], sans(9)) + 8
+    draw.rounded_rectangle([x + w - src_w - 5, y + 49, x + w - 5, y + 64],
                            radius=3, fill=PAPER)
-    draw.text((x + w - src_w - 1, y + 30), card["source"], font=sans(8),
+    draw.text((x + w - src_w - 1, y + 52), card["source"], font=sans(9),
               fill=INK_SOFT)
-    draw.text((x + 6, y + 50), card["kicker"], font=sans_bold(8),
+    draw.text((x + 6, y + 74), card["kicker"], font=sans_bold(9),
               fill=RED_DARK)
-    hy = draw_wrapped(draw, (x + 6, y + 62), card["headline"], serif_bold(13),
-                      INK, w - 12, 15, max_lines=2)
+    hy = draw_wrapped(draw, (x + 6, y + 86), card["headline"], serif_bold(13),
+                      INK, w - 12, 14, max_lines=2)
     draw_wrapped(draw, (x + 6, hy + 1), card["body"], sans(10), INK,
-                 w - 12, 12, max_lines=2)
+                 w - 12, 11, max_lines=2)
 
 
 # --------------------------------------------------------------------------
@@ -664,26 +706,48 @@ def draw_card(draw, x, y, w, h, card):
 # --------------------------------------------------------------------------
 
 CONTINENTS = [
-    [(8, 34), (30, 20), (58, 16), (76, 24), (72, 40), (58, 46), (52, 60),
-     (40, 68), (30, 62), (18, 50), (10, 42)],                      # N America
-    [(52, 74), (68, 72), (74, 84), (68, 106), (57, 122), (48, 102),
-     (46, 86)],                                                    # S America
-    [(126, 24), (148, 16), (168, 22), (166, 36), (152, 42), (139, 39),
-     (131, 33)],                                                   # Europe
-    [(132, 54), (158, 49), (174, 60), (172, 86), (159, 108), (142, 103),
-     (134, 78)],                                                   # Africa
-    [(168, 20), (212, 13), (250, 22), (264, 39), (247, 54), (229, 51),
-     (215, 64), (197, 60), (183, 49), (171, 37)],                  # Asia
-    [(196, 60), (209, 59), (202, 79)],                             # India
-    [(222, 57), (235, 61), (229, 78), (220, 67)],                  # SE Asia
-    [(238, 90), (263, 85), (272, 98), (255, 109), (240, 102)],     # Australia
-    [(283, 116), (289, 112), (291, 119), (285, 124)],              # New Zealand
+    [(8, 34), (22, 24), (38, 18), (58, 16), (70, 20), (76, 24), (74, 34),
+     (66, 42), (58, 46), (54, 54), (50, 62), (42, 68), (34, 66), (28, 58),
+     (18, 50), (12, 44), (8, 38)],                                 # N America
+    [(52, 74), (62, 71), (70, 74), (74, 84), (72, 96), (66, 110),
+     (60, 120), (57, 124), (52, 112), (48, 98), (46, 86)],         # S America
+    [(126, 24), (138, 18), (150, 16), (160, 19), (168, 22), (167, 30),
+     (160, 37), (152, 42), (143, 40), (136, 36), (131, 33),
+     (127, 28)],                                                   # Europe
+    [(132, 54), (146, 50), (158, 49), (168, 54), (174, 62), (172, 76),
+     (166, 94), (159, 108), (150, 106), (142, 103), (137, 90),
+     (134, 72), (132, 62)],                                        # Africa
+    [(168, 20), (190, 15), (212, 13), (232, 16), (250, 22), (260, 30),
+     (264, 39), (255, 48), (247, 54), (236, 53), (229, 51), (220, 58),
+     (215, 64), (205, 62), (197, 60), (190, 54), (183, 49), (176, 42),
+     (171, 37), (169, 28)],                                        # Asia
+    [(196, 60), (204, 59), (209, 59), (206, 68), (202, 79),
+     (199, 70)],                                                   # India
+    [(222, 57), (230, 58), (235, 61), (233, 70), (229, 78),
+     (224, 72), (220, 67)],                                        # SE Asia
+    [(238, 90), (250, 86), (263, 85), (270, 90), (272, 98), (264, 105),
+     (255, 109), (246, 106), (240, 102)],                          # Australia
+    [(283, 116), (287, 111), (289, 112), (291, 119), (288, 123),
+     (285, 124)],                                                  # New Zealand
 ]
 
+# Pins: (story, anchor x, anchor y, circle x, circle y) in map coordinates.
+# In crowded Europe the numbered circle is offset from its anchor point and
+# joined to it by a thin leader line, so no two circles touch.
 PINS = [
-    (1, 160, 30), (2, 203, 66), (3, 233, 50), (4, 152, 45), (5, 253, 38),
-    (6, 139, 27), (7, 146, 35), (8, 287, 120), (9, 238, 41), (10, 33, 60),
-    (11, 177, 52), (12, 24, 42), (13, 157, 90),
+    (1, 160, 30, 160, 30),      # Kyiv
+    (2, 203, 66, 203, 66),      # Gopalpur, Odisha
+    (3, 233, 50, 233, 50),      # Asia sell-off (Taipei)
+    (4, 155, 44, 167, 54),      # Antalya, COP31
+    (5, 253, 38, 253, 38),      # Tokyo
+    (6, 138, 26, 126, 17),      # Brussels
+    (7, 145, 36, 136, 45),      # Rome
+    (8, 287, 120, 287, 120),    # Wellington
+    (9, 163, 25, 177, 15),      # Eastern Poland
+    (10, 131, 34, 117, 41),     # Barcelona
+    (11, 163, 84, 163, 84),     # Turkana, Kenya
+    (12, 177, 52, 191, 59),     # Jurf al-Sakhar, Iraq
+    (13, 33, 60, 33, 60),       # San Salvador
 ]
 
 
@@ -691,25 +755,28 @@ def draw_map(draw, x, y, w, h):
     draw.text((x, y), "WHERE IT HAPPENED — THE 13 DRAWN STORIES",
               font=sans_bold(10), fill=INK)
     my = y + 15
-    draw.rounded_rectangle([x, my, x + w, my + h], radius=6,
-                           fill=(233, 223, 199))
+    draw.rounded_rectangle([x, my, x + w, my + h], radius=6, fill=NAVY)
     sx = w / 300.0
     sy = h / 132.0
     for poly in CONTINENTS:
         pts = [(x + px * sx, my + py * sy) for px, py in poly]
-        draw.polygon(pts, fill=NAVY)
-    for num, px, py in PINS:
-        cx, cyy = x + px * sx, my + py * sy
-        draw.ellipse([cx - 7, cyy - 7, cx + 7, cyy + 7], fill=RED,
+        draw.polygon(pts, fill=TAN)
+    for num, ax, ay, cx, cy in PINS:
+        px, py = x + ax * sx, my + ay * sy
+        qx, qy = x + cx * sx, my + cy * sy
+        if (ax, ay) != (cx, cy):
+            draw.line([px, py, qx, qy], fill=(210, 205, 190), width=1)
+            draw.ellipse([px - 2, py - 2, px + 2, py + 2], fill=WHITE)
+        draw.ellipse([qx - 6, qy - 6, qx + 6, qy + 6], fill=RED,
                      outline=WHITE, width=1)
         label = str(num)
         tw = text_w(draw, label, sans_bold(8))
-        draw.text((cx - tw / 2, cyy - 4), label, font=sans_bold(8),
+        draw.text((qx - tw / 2, qy - 4), label, font=sans_bold(8),
                   fill=WHITE)
 
 
 # --------------------------------------------------------------------------
-# Briefs: 23 sourced one-liners (stories 14-36)
+# Briefs: 27 sourced one-liners (stories 14-40)
 # --------------------------------------------------------------------------
 
 BRIEFS = [
@@ -717,37 +784,42 @@ BRIEFS = [
     (15, "TURIN", "ATP groups end; semi-finals are Saturday (ATP)"),
     (16, "SHENZHEN", "Xi hails 'turnaround' in Australia ties (Xinhua)"),
     (17, "COX'S BAZAR", "Rohingya camps react to the ICJ ruling (AP)"),
-    (18, "DAKAR", "Migrant boat sinks off Yenne; 4 dead (Agencies)"),
-    (19, "SPACE", "BepiColombo reaches Mercury; orbit entry Sat (ESA)"),
-    (20, "TONGA", "El Niño drought emergency declared (RNZ)"),
-    (21, "DOROGOBUZH", "Plant hit by drones [CLAIM, unconfirmed]"),
-    (22, "YEMEN", "Missile claim disputed by both sides [CLAIM]"),
-    (23, "KHARKIV", "Drone hits a hospital; at least 4 hurt (Officials)"),
-    (24, "KRYVYI RIH", "Drones cut power to hospitals (Officials)"),
-    (25, "DNIPRO", "Five injured in a drone attack (Officials)"),
-    (26, "SEOUL", "Court upholds Kakao founder's acquittal (Yonhap)"),
-    (27, "GOLD", "Falls 2.6% to $3,526, lowest since Sep 2025 (Markets)"),
-    (28, "ANTALYA", "France: fossil gap a 'black mark' on COP31 (AFP)"),
-    (29, "SYDNEY", "General Pants enters administration (Filings)"),
-    (30, "BEIT SHEMESH", "Haredi protesters clash with police (Press)"),
-    (31, "DODOMA", "Tanzania now a top-five African gold holder (Bank)"),
-    (32, "PORT-AU-PRINCE", "Raid kills 34 gang suspects (Police)"),
-    (33, "MEXICO CITY", "116th Revolution Day marked (Government)"),
-    (34, "SÃO PAULO", "Markets shut for Black Consciousness Day (B3)"),
-    (35, "RED SEA", "Gunmen fire on a cargo ship off Yemen (UKMTO)"),
-    (36, "SEOUL", "Sell-off triggers a KOSPI trading curb (Exchange)"),
+    (18, "SPACE", "BepiColombo reaches Mercury; orbit entry Sat (ESA)"),
+    (19, "DOROGOBUZH", "Plant hit by drones [CLAIM, unconfirmed]"),
+    (20, "YEMEN", "Missile claim disputed by both sides [CLAIM]"),
+    (21, "KHARKIV", "Drone hits a hospital; at least 4 hurt (Officials)"),
+    (22, "KRYVYI RIH", "Drones cut power to hospitals (Officials)"),
+    (23, "DNIPRO", "Five injured in a drone attack (Officials)"),
+    (24, "SEOUL", "Court upholds Kakao founder's acquittal (Yonhap)"),
+    (25, "GOLD", "Falls 2.6% to $3,526, lowest since Sep 2025 (Markets)"),
+    (26, "ANTALYA", "France: fossil gap a 'black mark' on COP31 (AFP)"),
+    (27, "SYDNEY", "General Pants enters administration (Filings)"),
+    (28, "BEIT SHEMESH", "Haredi protesters clash with police (Press)"),
+    (29, "DODOMA", "Tanzania now a top-five African gold holder (Bank)"),
+    (30, "PORT-AU-PRINCE", "Raid kills 34 gang suspects (Police)"),
+    (31, "RED SEA", "Gunmen fire on a cargo ship off Yemen (UKMTO)"),
+    (32, "SEOUL", "Sell-off triggers a KOSPI trading curb (Exchange)"),
+    (33, "LVIV", "Railway-station strike kills two (BBC)"),
+    (34, "AFRICA", "AfDB: 22 countries in debt distress (allAfrica)"),
+    (35, "TALLINN", "Estonia shuts Russia road border 1 Dec (Reuters)"),
+    (36, "BERLIN", "Pupils strike against military service (Al Jazeera)"),
+    (37, "HORMUZ", "Strait shut; 46 ships wait, Brent $92.50 (Trackers)"),
+    (38, "LAS VEGAS", "Russell tops wet practice, 1:47.272 (Timing)"),
+    (39, "LILONGWE", "20-litre daily fuel cap; petrol $3.24 (Ministry)"),
+    (40, "SEOUL", "Ruling party moves to impeach chief justice (SBS)"),
 ]
 
 
 def draw_briefs(draw, x, y, w):
-    draw.text((x, y), "ALSO ON FRIDAY 20 NOVEMBER — 23 MORE STORIES",
-              font=serif_bold(13), fill=INK)
+    draw.text((x, y), "ALSO ON FRIDAY 20 NOVEMBER — %d MORE STORIES"
+              % len(BRIEFS), font=serif_bold(13), fill=INK)
     col_w = (w - 16) // 2
     top = y + 19
-    pitch = 11.0
+    pitch = 10.4
+    half = (len(BRIEFS) + 1) // 2
     for i, (num, place, text) in enumerate(BRIEFS):
-        col = 0 if i < 12 else 1
-        row = i if i < 12 else i - 12
+        col = 0 if i < half else 1
+        row = i if i < half else i - half
         bx = x + col * (col_w + 16)
         by = top + row * pitch
         num_s = str(num)
@@ -765,10 +837,10 @@ def draw_briefs(draw, x, y, w):
 
 THURSDAY_ITEMS = [
     "Trump-Xi-Putin summit & APEC declaration, Shenzhen",
-    "ICJ ruling on Myanmar (Rohingya) — Friday's camp reaction is story 17",
+    "ICJ ruling on Myanmar (Rohingya) — camp reaction is story 17",
+    "Tonga's drought emergency · the migrant boat lost off Senegal",
     "Wall Street's 2% fall — the sell-off's trigger, not its news",
-    "GTA VI midnight launch · Voyager 1's one-light-day mark",
-    "Crimean Bridge strike · Senate's 48-51 Iran war-powers vote",
+    "GTA VI launch · Voyager 1 mark · Crimean Bridge · Senate vote",
 ]
 
 NOT_YET_ITEMS = [
@@ -790,12 +862,12 @@ def draw_date_check(draw, y0, y1):
     heads = ["THURSDAY 19 NOVEMBER'S NEWS — NOT FRIDAY'S:",
              "NOT YET HAPPENED — SO NOT SHOWN:"]
     for ci, items in enumerate((THURSDAY_ITEMS, NOT_YET_ITEMS)):
-        draw.text((col_x[ci], y0 + 26), heads[ci], font=sans_bold(9),
+        draw.text((col_x[ci], y0 + 24), heads[ci], font=sans_bold(9),
                   fill=RED_DARK)
-        iy = y0 + 38
+        iy = y0 + 34
         for item in items:
             draw.text((col_x[ci], iy), "· " + item, font=sans(9), fill=INK)
-            iy += 10.2
+            iy += 9.8
 
 
 def draw_footer(draw):
@@ -818,26 +890,26 @@ def build_page():
     draw_strap(draw)
     draw_masthead(draw)
     draw_deck(draw)
-    draw_stats(draw, 156, 218)
-    tally_end = draw_tally(draw, 224)
-    hero_y = tally_end + 6
-    hero_h = 208
+    draw_stats(draw, 152, 208)
+    tally_end = draw_tally(draw, 214)
+    hero_y = tally_end + 1
+    hero_h = 190
     hero_w = (W - 2 * MARGIN - 16) // 3
     for i, hero in enumerate(HEROES):
         draw_hero(draw, MARGIN + i * (hero_w + 8), hero_y, hero_w, hero_h,
                   hero)
     card_y = hero_y + hero_h + 8
-    card_h = 126
+    card_h = 140
     card_w = (W - 2 * MARGIN - 32) // 5
     for r in range(2):
         for c in range(5):
             draw_card(draw, MARGIN + c * (card_w + 8),
                       card_y + r * (card_h + 6), card_w, card_h,
                       CARDS[r * 5 + c])
-    band_y = card_y + 2 * card_h + 14
-    draw_map(draw, MARGIN, band_y, 300, 128)
-    draw_briefs(draw, MARGIN + 316, band_y, W - MARGIN - (MARGIN + 316))
-    draw_date_check(draw, 916, 1004)
+    band_y = card_y + 2 * card_h + 12
+    draw_map(draw, MARGIN, band_y, 340, 114)
+    draw_briefs(draw, MARGIN + 356, band_y, W - MARGIN - (MARGIN + 356))
+    draw_date_check(draw, 916, 1002)
     draw_footer(draw)
     return img
 
